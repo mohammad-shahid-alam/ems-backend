@@ -2,7 +2,9 @@ package net.javaguides.ems.repository;
 
 import net.javaguides.ems.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EmployeeRepository extends JpaRepository <Employee, Long >{
+
+public interface EmployeeRepository extends JpaRepository<Employee , Long> {
 
 }
