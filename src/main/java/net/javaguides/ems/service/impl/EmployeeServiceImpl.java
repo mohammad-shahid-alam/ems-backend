@@ -2,6 +2,7 @@ package net.javaguides.ems.service.impl;
 
 import net.javaguides.ems.dto.EmployeeDto;
 import net.javaguides.ems.entity.Employee;
+import net.javaguides.ems.exception.EmailAlreadyExistsException;
 import net.javaguides.ems.exception.ResourceNotFoundException;
 import net.javaguides.ems.mapper.EmployeeMapper;
 import net.javaguides.ems.repository.EmployeeRepository;
@@ -22,6 +23,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
+        if(employeeRepository.existsByEmail(employeeDto.getEmail())) {
+            throw new EmailAlreadyExistsException("Employee already exists with email : " + employeeDto.getEmail());
+        }
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
        Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
