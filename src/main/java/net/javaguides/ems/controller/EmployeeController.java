@@ -3,6 +3,7 @@ package net.javaguides.ems.controller;
 import jakarta.validation.Valid;
 import net.javaguides.ems.dto.EmployeeDto;
 import net.javaguides.ems.service.EmployeeService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,8 +42,12 @@ public class EmployeeController {
     // BUILD GET ALL EMPLOYEE REST API
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDto>> getAllEmployee() {
-        List<EmployeeDto> employees = employeeService.getAllEmployees();
+    public ResponseEntity<Page<EmployeeDto>> getAllEmployee(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        Page<EmployeeDto> employees = employeeService.getAllEmployees(pageNo , pageSize , sortBy);
         return new ResponseEntity<>(employees , HttpStatus.OK);
     }
 

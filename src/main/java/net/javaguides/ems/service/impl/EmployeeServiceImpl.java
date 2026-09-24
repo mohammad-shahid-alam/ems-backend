@@ -1,5 +1,6 @@
 package net.javaguides.ems.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import net.javaguides.ems.dto.EmployeeDto;
 import net.javaguides.ems.entity.Employee;
 import net.javaguides.ems.exception.EmailAlreadyExistsException;
@@ -7,11 +8,16 @@ import net.javaguides.ems.exception.ResourceNotFoundException;
 import net.javaguides.ems.mapper.EmployeeMapper;
 import net.javaguides.ems.repository.EmployeeRepository;
 import net.javaguides.ems.service.EmployeeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -28,6 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
        Employee savedEmployee = employeeRepository.save(employee);
+       log.info("Saved employee with id : {}" , savedEmployee.getId());
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
 
@@ -39,10 +46,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        List <Employee> employees = employeeRepository.findAll();
-        return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
-                .collect(Collectors.toList());
+    public Page<EmployeeDto> getAllEmployees(int pageNo , int pageSize , String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo , pageSize , Sort.by(sortBy));
+            Page <Employee> employees = employeeRepository.findAll(pageable);
+        return employees.map(EmployeeMapper::mapToEmployeeDto);
     }
 
     @Override
@@ -54,6 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
        employee.setLastName(updatedEmployee.getLastName());
        employee.setEmail(updatedEmployee.getEmail());
        Employee updatedEmployeeObj = employeeRepository.save(employee);
+        log.info("Updated employee with id: {}", employeeId);
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
     }
 
@@ -64,7 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 () -> new ResourceNotFoundException("Employee does not exists with given id" + employeeId)
         );
         employeeRepository.deleteById(employeeId);
-
+        log.info("Deleted employee with id: {}", employeeId);
 
     }
 }
