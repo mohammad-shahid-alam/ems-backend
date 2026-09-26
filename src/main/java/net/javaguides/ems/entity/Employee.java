@@ -30,6 +30,9 @@ public class Employee {
     private LocalDate dateOfJoining;
 
 
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
 
 }
