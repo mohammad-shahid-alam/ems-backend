@@ -12,8 +12,11 @@ public class EmployeeMapper {
                 employee.getEmail(),
                 employee.getPhoneNumber(),
                 employee.getSalary(),
-                employee.getDateOfJoining()
+                employee.getDateOfJoining(),
+                employee.getDepartment() != null ? employee.getDepartment().getId() : null
         );
+
+
     }
     public static Employee mapToEmployee(EmployeeDto employeeDto) {
         return new Employee(
@@ -23,8 +26,11 @@ public class EmployeeMapper {
                employeeDto.getEmail(),
                 employeeDto.getPhoneNumber(),
                 employeeDto.getSalary(),
-                employeeDto.getDateOfJoining()
+                employeeDto.getDateOfJoining(),
+                null
+
 
         );
+
     }
 }

@@ -37,5 +37,9 @@ public class EmployeeDto {
     private LocalDate dateOfJoining;
 
 
+    @NotNull(message = "Department ID is required ")
+    private Long departmentId;
+
+
 
 }
