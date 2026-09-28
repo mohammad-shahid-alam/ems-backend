@@ -13,7 +13,8 @@ public class EmployeeMapper {
                 employee.getPhoneNumber(),
                 employee.getSalary(),
                 employee.getDateOfJoining(),
-                employee.getDepartment() != null ? employee.getDepartment().getId() : null
+                employee.getDepartment() != null ? employee.getDepartment().getId() : null,
+                employee.getDepartment() != null ? employee.getDepartment().getName() : null
         );
 
 
