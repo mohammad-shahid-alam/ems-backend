@@ -2,6 +2,8 @@ package net.javaguides.ems.controller;
 
 import jakarta.validation.Valid;
 import net.javaguides.ems.dto.EmployeeDto;
+import net.javaguides.ems.projection.EmployeeNameEmailView;
+import net.javaguides.ems.repository.EmployeeRepository;
 import net.javaguides.ems.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,9 +19,11 @@ import java.util.List;
 public class EmployeeController {
 
     private EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService , EmployeeRepository employeeRepository) {
         this.employeeService = employeeService;
+        this.employeeRepository = employeeRepository;
     }
 
     // BUILD ADD EMPLOYEE REST API
@@ -65,6 +69,13 @@ public class EmployeeController {
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId) {
         employeeService.deleteEmployee(employeeId);
         return new ResponseEntity<>("Employee Deleted Successfully" , HttpStatus.OK);
+    }
+
+    // Experiment for projection
+
+    @GetMapping("/department/{departmentId}/names")
+    public ResponseEntity<List<EmployeeNameEmailView>> getNameByDepartment(@PathVariable Long departmentId) {
+        return new ResponseEntity<>(employeeRepository.findByDepartmentId(departmentId) , HttpStatus.OK);
     }
 
 }
