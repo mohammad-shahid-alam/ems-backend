@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import net.javaguides.ems.dto.EmployeeDto;
 import net.javaguides.ems.projection.EmployeeNameEmailView;
 import net.javaguides.ems.repository.EmployeeRepository;
+import net.javaguides.ems.repository.ParkingSpotRepository;
 import net.javaguides.ems.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,15 @@ import java.util.List;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
+
     private EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
+    private final ParkingSpotRepository parkingSpotRepository;
 
-    public EmployeeController(EmployeeService employeeService , EmployeeRepository employeeRepository) {
+    public EmployeeController(EmployeeService employeeService , EmployeeRepository employeeRepository , ParkingSpotRepository parkingSpotRepository) {
         this.employeeService = employeeService;
         this.employeeRepository = employeeRepository;
+        this.parkingSpotRepository = parkingSpotRepository;
     }
 
     // BUILD ADD EMPLOYEE REST API
@@ -76,6 +80,13 @@ public class EmployeeController {
     @GetMapping("/department/{departmentId}/names")
     public ResponseEntity<List<EmployeeNameEmailView>> getNameByDepartment(@PathVariable Long departmentId) {
         return new ResponseEntity<>(employeeRepository.findByDepartmentId(departmentId) , HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/parking-spot")
+    public ResponseEntity<String> getParkingSpot(@PathVariable Long id) {
+        return parkingSpotRepository.findByEmployeeId(id)
+                .map(spot -> new ResponseEntity<>("Spot number: " + spot.getSpotNumber() , HttpStatus.OK))
+                .orElse(new ResponseEntity<>("No parking spot assigned" , HttpStatus.OK));
     }
 
 }
