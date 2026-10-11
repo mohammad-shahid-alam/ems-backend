@@ -72,7 +72,7 @@ public class EmployeeController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId) {
         employeeService.deleteEmployee(employeeId);
-        return new ResponseEntity<>("Employee Deleted Successfully" , HttpStatus.OK);
+        return new ResponseEntity<>("Employee Deleted Successfully " , HttpStatus.OK);
     }
 
     // Experiment for projection
@@ -86,7 +86,7 @@ public class EmployeeController {
     public ResponseEntity<String> getParkingSpot(@PathVariable Long id) {
         return parkingSpotRepository.findByEmployeeId(id)
                 .map(spot -> new ResponseEntity<>("Spot number: " + spot.getSpotNumber() , HttpStatus.OK))
-                .orElse(new ResponseEntity<>("No parking spot assigned" , HttpStatus.OK));
+                .orElse(new ResponseEntity<>("No parking spot assigned " , HttpStatus.OK));
     }
 
 }
